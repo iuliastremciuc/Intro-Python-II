@@ -1,25 +1,26 @@
 from room import Room
 from player import Player
+from item import Item
 
 # Declare all the rooms
 
 room = {
     'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
-
+                     "North of you, the cave mount beckons", Item("Map", "Take a look at the map")),
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
-passages run north and east."""),
+passages run north and east.""", Item("Sword", "Sword will help to fight the monster")),
 
     'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
 into the darkness. Ahead to the north, a light flickers in
-the distance, but there is no way across the chasm."""),
+the distance, but there is no way across the chasm.""", Item("Pill", "Get an extra life")),
+
 
     'narrow':   Room("Narrow Passage", """The narrow passage bends here from west
-to north. The smell of gold permeates the air."""),
+to north. The smell of gold permeates the air.""", Item("Water", "You can drink water")),
 
     'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
 chamber! Sadly, it has already been completely emptied by
-earlier adventurers. The only exit is to the south."""),
+earlier adventurers. The only exit is to the south.""", Item("Gold coin", "This is all that left from treasure!")),
 }
 
 
@@ -37,105 +38,51 @@ room['treasure'].s_to = room['narrow']
 
 
 # Main
-outside_room = room['outside']
-foyer_room = room['foyer']
-narrow_room = room['narrow']
-overlook_room = room['overlook']
-treasure_room = room['treasure']
-
-# x = input("Enter a command: ")
-# y = input("Welcome to the GAME! \nYou are in !" + str(outside_room))
-new_player = Player("Nat", room['outside'].room_name)
-print(new_player)
-while True:
-    print("Welcome to the GAME! " )
-    y = input("Enter your name: ")
-    player1 = Player(str(y), room['outside'].room_name )
-    print("Welcome " + player1.player_name + " you are --> " + str(outside_room))
-    print("Press 'n' to proceed!!")
-    x = input("Enter a command: ")
-    while True:
-        if x == 'n':
-            print("You are in " +str(foyer_room))
-        else:
-            print("The only way to start game it's to go North. \n Please press 'n'!")###### can't understand why it print this inside of nested loop
-        x = input("Enter a command: ")
-        # break
-        while True:
-            if x  == 'e':
-                print("You are in " + str(narrow_room))
-                x = input("Enter a command: ")
-                while True:
-                    if x == 'w':
-                        print("You are back in " + str(foyer_room))
-                    elif x == 'n':
-                        print("You are in the " + str(treasure_room))
-                        x = input("Enter a command: ")
-                        if x == 's':
-                            print("You are back in the " + str(narrow_room))
-                        else:
-                            print("Stuck in this room forever!!!")
-                        break
-                    else:                    
-                        print("Got lost forever....")
-                        
-
-                    x = input("Enter a command: ")
-                    break
-            elif x == 'n':
-                print("You are in " + str(overlook_room))
-                x = input("Enter a command: ")
-                while True:
-                    if x == 's':
-                        print("You are back in " + str(foyer_room))
-                    else:
-                        print("You are falling off the cliff!!!!!!")
-                    x = input("Enter a command: ")
-
-            elif x == 's':
-                print("You are back in " + str(outside_room)) # it's treaky, can't figure out how to direct it to previous loop
-            else:
-                print("Invalid move! \nFrom foyer you can go only 's', 'n', 'e'!!!")
-            break
-
-#####Two last command output are from previous loops
-          
-# Welcome to the GAME!
-# Enter your name: man
-# Welcome man you are --> Outside Cave Entrance, North of you, the cave mount beckons
-# Press 'n' to proceed!!
-# Enter a command: n
-# You are in Foyer, Dim light filters in from the south. Dusty
-# passages run north and east.
-# Enter a command: e
-# You are in Narrow Passage, The narrow passage bends here from west
-# to north. The smell of gold permeates the air.
-# Enter a command: n
-# You are in the Treasure Chamber, You've found the long-lost treasure
-# chamber! Sadly, it has already been completely emptied by
-# earlier adventurers. The only exit is to the south.
-# Enter a command: s
-# You are back in the Narrow Passage, The narrow passage bends here from west
-# to north. The smell of gold permeates the air.
-# The only way to start game it's to go North.
-#  Please press 'n'!
-# Enter a command: n
-# You are in Grand Overlook, A steep cliff appears before you, falling
-# into the darkness. Ahead to the north, a light flickers in
-# the distance, but there is no way across the chasm.
 
 
-
-
-# main()
-
-# new_player = 
+player = Player("name", room['outside'])
 
 # Make a new player object that is currently in the 'outside' room.
 
 # Write a loop that:
+while True:
+
+    print(player.current_room)
+    command = input(">>> ").split(',')
+    # print(command)
+    player_location = player.current_room
+    
+    if command[0] == 'q':
+        break
+    elif command[0] == 'n':
+        # check if the player can move north
+        if player_location.n_to:
+            # if there is set that north room as the player's current_room
+            player.current_room = player_location.n_to
+        else:
+            print("You can't go this direction!")
+        
+    elif command[0] == 's':
+        if player_location.s_to:
+            # if there is set that north room as the player's current_room
+            player.current_room = player_location.s_to
+        else:
+            print("You can't go this direction!")
+    elif command[0] == 'e':
+        if player_location.e_to:
+            # if there is set that north room as the player's current_room
+            player.current_room = player_location.e_to
+        else:
+            print("You can't go this direction!")
+    elif command[0] == 'w':
+        if player_location.w_to:
+            # if there is set that north room as the player's current_room
+            player.current_room = player_location.w_to
+        else:
+            print("You can't go this direction!")
 #
 # * Prints the current room name
+# print(playew.current_room)
 # * Prints the current description (the textwrap module might be useful here).
 # * Waits for user input and decides what to do.
 #
